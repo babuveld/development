@@ -1,0 +1,27 @@
+% ./test_main
+[==========] Running 4 tests from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 4 tests from UnorderedHashMapTest
+[ RUN      ] UnorderedHashMapTest.BasicCreateAndExistEntry
+[       OK ] UnorderedHashMapTest.BasicCreateAndExistEntry (0 ms)
+[ RUN      ] UnorderedHashMapTest.BasicDeleteAndGetEntry
+[       OK ] UnorderedHashMapTest.BasicDeleteAndGetEntry (0 ms)
+[ RUN      ] UnorderedHashMapTest.Negative
+[       OK ] UnorderedHashMapTest.Negative (0 ms)
+[ RUN      ] UnorderedHashMapTest.Perf10KEntriesRandomLookup
+-----------------------------------------------------
+> Hash Entry allocation for 10K entries = 9 ms
+> Hash Entry lookup of 9000/10000 = 739 ns
+> Hash Entry lookup of 1000/10000 = 464 ns
+> Hash Entry lookup of 7000/10000 = 57 ns
+> Hash Entry lookup of 3000/10000 = 358 ns
+> Hash Entry lookup of 4500/10000 = 601 ns
+> Hash Entry deletion for 10K entries = 6 ms
+-----------------------------------------------------
+[       OK ] UnorderedHashMapTest.Perf10KEntriesRandomLookup (17 ms)
+[----------] 4 tests from UnorderedHashMapTest (17 ms total)
+
+[----------] Global test environment tear-down
+[==========] 4 tests from 1 test suite ran. (17 ms total)
+[  PASSED  ] 4 tests.
+%
