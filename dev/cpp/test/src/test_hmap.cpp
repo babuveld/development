@@ -1,15 +1,16 @@
 /*
  *------------------------------------------------------------------
- * Google Test for the unordered map API's
+ * Google Test for the hashmap API's
  *------------------------------------------------------------------
  */
 #include <iostream>
 #include <gtest/gtest.h>
-#include <unordered_hmap.hpp>
+#include <hmap.hpp>
 #include <string.h>
 #include <ctime>
 
-unordered_hashmap hmap;
+hashmap<unordered_htbl_t> hmap;
+hashmap<ordered_htbl_t>   ordered_hmap;
 
 typedef struct test_hash_entry_ {
     std::string keyname;
@@ -32,6 +33,21 @@ test_hmap_entry_add (int num_entries)
 }
 
 void
+test_hmap_entry_sorted_add (int num_entries)
+{
+    test_hash_entry_t *hash_entry;
+
+    for (int idx = 0; idx <= num_entries; idx++) {
+        hash_entry = (test_hash_entry_t *)std::calloc(1, sizeof(test_hash_entry_t));
+        if (hash_entry) {
+            hash_entry->keyname = "key" + std::to_string(idx);
+            hash_entry->value = hash_entry->keyname;
+            ordered_hmap.entry_insert(hash_entry->keyname, hash_entry);
+        }
+    }
+}
+
+void
 test_hmap_entry_delete (int num_entries)
 {
     test_hash_entry_t *hash_entry = NULL;
@@ -40,6 +56,19 @@ test_hmap_entry_delete (int num_entries)
     for (int idx = 0; idx <= num_entries; idx++) {
         keyname = "key" + std::to_string(idx);
         hash_entry = (test_hash_entry_t *)hmap.entry_delete(keyname);
+        free(hash_entry);
+    }
+}
+
+void
+test_hmap_entry_sorted_delete (int num_entries)
+{
+    test_hash_entry_t *hash_entry = NULL;
+    std::string keyname;
+
+    for (int idx = 0; idx <= num_entries; idx++) {
+        keyname = "key" + std::to_string(idx);
+        hash_entry = (test_hash_entry_t *)ordered_hmap.entry_delete(keyname);
         free(hash_entry);
     }
 }
@@ -136,37 +165,84 @@ TEST(UnorderedHashMapTest, Perf10KEntriesRandomLookup)
     hash_entry = (test_hash_entry_t *)hmap.entry_get(keyname);
     end = std::chrono::steady_clock::now();
     std::cout << "> Hash Entry lookup of 9000/10000 = " << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ns" << std::endl;
-    EXPECT_EQ(true, hash_entry != NULL);
 
     keyname = "key1000";
     begin = std::chrono::steady_clock::now();
     hash_entry = (test_hash_entry_t *)hmap.entry_get(keyname);
     end = std::chrono::steady_clock::now();
     std::cout << "> Hash Entry lookup of 1000/10000 = " << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ns" << std::endl;
-    EXPECT_EQ(true, hash_entry != NULL);
 
     keyname = "key7000";
     begin = std::chrono::steady_clock::now();
+    hash_entry = (test_hash_entry_t *)hmap.entry_get(keyname);
     end = std::chrono::steady_clock::now();
     std::cout << "> Hash Entry lookup of 7000/10000 = " << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ns" << std::endl;
-    EXPECT_EQ(true, hmap.entry_exists(keyname));
 
     keyname = "key3000";
     begin = std::chrono::steady_clock::now();
     hash_entry = (test_hash_entry_t *)hmap.entry_get(keyname);
     end = std::chrono::steady_clock::now();
     std::cout << "> Hash Entry lookup of 3000/10000 = " << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ns" << std::endl;
-    EXPECT_EQ(true, hash_entry != NULL);
 
     keyname = "key4500";
     begin = std::chrono::steady_clock::now();
     hash_entry = (test_hash_entry_t *)hmap.entry_get(keyname);
     end = std::chrono::steady_clock::now();
     std::cout << "> Hash Entry lookup of 4500/10000 = " << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ns" << std::endl;
-    EXPECT_EQ(EEXIST, hmap.entry_insert(keyname, hash_entry));
 
     begin = std::chrono::steady_clock::now();
     test_hmap_entry_delete(10000);
+    end = std::chrono::steady_clock::now();
+    std::cout << "> Hash Entry deletion for 10K entries = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << std::endl;
+
+    std::cout << "-----------------------------------------------------" << std::endl;
+}
+
+TEST(OrderedHashMapTest, Perf10KEntriesRandomLookup)
+{
+    test_hash_entry_t *hash_entry;
+    std::string keyname;
+    std::chrono::steady_clock::time_point begin, end;
+
+    begin = std::chrono::steady_clock::now();
+    test_hmap_entry_sorted_add(10000);
+    end = std::chrono::steady_clock::now();
+    std::cout << "-----------------------------------------------------" << std::endl;
+    std::cout << "> Hash Entry allocation for 10K entries = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << std::endl;
+
+    keyname = "key9000";
+    begin = std::chrono::steady_clock::now();
+    hash_entry = (test_hash_entry_t *)ordered_hmap.entry_get(keyname);
+    end = std::chrono::steady_clock::now();
+    std::cout << "> Hash Entry lookup of 9000/10000 = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " us" << std::endl;
+    EXPECT_EQ(true, hash_entry != NULL);
+
+    keyname = "key1000";
+    begin = std::chrono::steady_clock::now();
+    hash_entry = (test_hash_entry_t *)ordered_hmap.entry_get(keyname);
+    end = std::chrono::steady_clock::now();
+    std::cout << "> Hash Entry lookup of 1000/10000 = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " us" << std::endl;
+
+    keyname = "key7000";
+    begin = std::chrono::steady_clock::now();
+    hash_entry = (test_hash_entry_t *)ordered_hmap.entry_get(keyname);
+    end = std::chrono::steady_clock::now();
+    std::cout << "> Hash Entry lookup of 7000/10000 = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " us" << std::endl;
+
+    keyname = "key3000";
+    begin = std::chrono::steady_clock::now();
+    hash_entry = (test_hash_entry_t *)ordered_hmap.entry_get(keyname);
+    end = std::chrono::steady_clock::now();
+    std::cout << "> Hash Entry lookup of 3000/10000 = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " us" << std::endl;
+
+    keyname = "key4500";
+    begin = std::chrono::steady_clock::now();
+    hash_entry = (test_hash_entry_t *)ordered_hmap.entry_get(keyname);
+    end = std::chrono::steady_clock::now();
+    std::cout << "> Hash Entry lookup of 4500/10000 = " << std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count() << " us" << std::endl;
+
+    begin = std::chrono::steady_clock::now();
+    test_hmap_entry_sorted_delete(10000);
     end = std::chrono::steady_clock::now();
     std::cout << "> Hash Entry deletion for 10K entries = " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << std::endl;
 

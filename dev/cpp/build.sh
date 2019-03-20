@@ -22,4 +22,4 @@ make
 ########################
 # Run the test program #
 ########################
-./test_main
+# ./test_main

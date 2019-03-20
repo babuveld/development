@@ -1,15 +1,15 @@
 /*
  *------------------------------------------------------------------
- * Unordered Hashmap
- * Check header file unorederd_hmap.hpp for the description
+ * Hashmap
+ * Check header file hmap.hpp for the description
  *------------------------------------------------------------------
  */
 
-#include <unordered_hmap.hpp>
+#include <hmap.hpp>
 
-int
-unordered_hashmap::entry_insert (std::string &key_name, 
-                                 void *value)
+template <typename T> 
+int hashmap<T>::entry_insert (std::string &key_name, 
+                              void *value)
 {
     int rc = EOK;
 
@@ -31,14 +31,13 @@ unordered_hashmap::entry_insert (std::string &key_name,
     return rc;
 }
 
-void *
-unordered_hashmap::entry_delete (std::string &key_name)
+template <typename T> 
+void * hashmap<T>::entry_delete (std::string &key_name)
 {
     void *data = NULL;
-    unordered_htbl_t::iterator it;
 
     htbl_mtx.lock();
-    it = htbl.find(key_name);
+    auto it = htbl.find(key_name);
     if (it != htbl.end()) {
         data = it->second;
         htbl.erase(it);
@@ -48,18 +47,17 @@ unordered_hashmap::entry_delete (std::string &key_name)
     return data;
 }
 
-void 
-unordered_hashmap::entry_iterator_delete_all (hash_entry_delete_cb cb)
+template <typename T> 
+void hashmap<T>::entry_iterator_delete_all (hash_entry_delete_cb cb)
 {
     void *data = NULL;
-    unordered_htbl_t::iterator it;
 
     if (!cb) {
         return;
     }
 
     htbl_mtx.lock();
-    for (it = htbl.begin(); it != htbl.end(); it++) {
+    for (auto it = htbl.begin(); it != htbl.end(); it++) {
         data = it->second;
         htbl.erase(it);
         cb(data);
@@ -67,8 +65,8 @@ unordered_hashmap::entry_iterator_delete_all (hash_entry_delete_cb cb)
     htbl_mtx.unlock();
 }
 
-void *
-unordered_hashmap::entry_get (std::string &key_name)
+template <typename T> 
+void * hashmap<T>::entry_get (std::string &key_name)
 {
     void *value = NULL;
 
@@ -85,8 +83,8 @@ unordered_hashmap::entry_get (std::string &key_name)
     return value;
 }
 
-bool
-unordered_hashmap::entry_exists (std::string &key_name)
+template <typename T> 
+bool hashmap<T>::entry_exists (std::string &key_name)
 {
     bool exists = false;
 
@@ -100,8 +98,8 @@ unordered_hashmap::entry_exists (std::string &key_name)
     return exists;
 }
 
-bool
-unordered_hashmap::is_empty (void)
+template <typename T> 
+bool hashmap<T>::is_empty (void)
 {
     bool empty = false;
 

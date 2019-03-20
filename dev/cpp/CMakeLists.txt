@@ -22,7 +22,6 @@ include_directories(${GTEST_INCLUDE_DIRS})
 #################################
 include_directories (
     include
-    src
     )
 
 ##############################################
@@ -32,32 +31,21 @@ link_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 #********************************* SOURCES *************************************
 
-#############################
-# Infra Library Source code #
-#############################
-set (SRC_INFRA
-    src/unordered_hmap.cpp
-    )
 
 ####################
 # Test Source code #
 ####################
 set (SRC_TEST
      test/src/test_main.cpp
-     test/src/test_unordered_hmap.cpp
+     test/src/test_hmap.cpp
     )
 
 #*********************************** TARGETS ***********************************
-
-######################
-# Create the library #
-######################
-add_library (infra SHARED ${SRC_INFRA})
 
 ################
 # Test Program #
 ################
 add_executable (test_main ${SRC_TEST})
-target_link_libraries(test_main ${GTEST_LIBRARIES} infra pthread)
+target_link_libraries(test_main ${GTEST_LIBRARIES} pthread)
 
 #********************************************************************************

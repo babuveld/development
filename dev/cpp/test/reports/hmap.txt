@@ -1,0 +1,44 @@
+bdravida@BDRAVIDA-M-33NH% ./test_main
+[==========] Running 5 tests from 2 test suites.
+[----------] Global test environment set-up.
+[----------] 4 tests from UnorderedHashMapTest
+[ RUN      ] UnorderedHashMapTest.BasicCreateAndExistEntry
+[       OK ] UnorderedHashMapTest.BasicCreateAndExistEntry (0 ms)
+[ RUN      ] UnorderedHashMapTest.BasicDeleteAndGetEntry
+[       OK ] UnorderedHashMapTest.BasicDeleteAndGetEntry (0 ms)
+[ RUN      ] UnorderedHashMapTest.Negative
+[       OK ] UnorderedHashMapTest.Negative (0 ms)
+[ RUN      ] UnorderedHashMapTest.Perf10KEntriesRandomLookup
+-----------------------------------------------------
+> Hash Entry allocation for 10K entries = 15 ms
+> Hash Entry lookup of 9000/10000 = 1849 ns
+> Hash Entry lookup of 1000/10000 = 1095 ns
+> Hash Entry lookup of 7000/10000 = 840 ns
+> Hash Entry lookup of 3000/10000 = 969 ns
+> Hash Entry lookup of 4500/10000 = 1192 ns
+> Hash Entry deletion for 10K entries = 10 ms
+-----------------------------------------------------
+[       OK ] UnorderedHashMapTest.Perf10KEntriesRandomLookup (27 ms)
+[----------] 4 tests from UnorderedHashMapTest (27 ms total)
+
+[----------] 1 test from OrderedHashMapTest
+[ RUN      ] OrderedHashMapTest.Perf10KEntriesRandomLookup
+-----------------------------------------------------
+> Hash Entry allocation for 10K entries = 53 ms
+> Hash Entry lookup of 9000/10000 = 5 us
+> Hash Entry lookup of 1000/10000 = 2 us
+> Hash Entry lookup of 7000/10000 = 3 us
+> Hash Entry lookup of 3000/10000 = 2 us
+> Hash Entry lookup of 4500/10000 = 3 us
+> Hash Entry deletion for 10K entries = 20 ms
+-----------------------------------------------------
+[       OK ] OrderedHashMapTest.Perf10KEntriesRandomLookup (74 ms)
+[----------] 1 test from OrderedHashMapTest (74 ms total)
+
+[----------] Global test environment tear-down
+[==========] 5 tests from 2 test suites ran. (101 ms total)
+[  PASSED  ] 5 tests.
+
+  YOU HAVE 1 DISABLED TEST
+
+bdravida@BDRAVIDA-M-33NH%
