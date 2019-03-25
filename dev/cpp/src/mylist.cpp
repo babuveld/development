@@ -1,4 +1,6 @@
 /*
+ * https://github.com/gibsjose/cpp-cheat-sheet/blob/master/Data%20Structures%20and%20Algorithms.md
+ *
  * Its a double linked list. Its slower compared to vectors.
  *
  * Use:
@@ -58,7 +60,7 @@ list_item_insert (std::string &item, int idx)
 void
 list_item_front_remove (std::string &item)
 {
-    mylist.pop_front(item);
+    mylist.pop_front();
 }
 
 /* Insertion operations.
@@ -67,7 +69,7 @@ list_item_front_remove (std::string &item)
 void
 list_item_back_remove (std::string &item)
 {
-    mylist.pop_back(item);
+    mylist.pop_back();
 }
 
 /* Remove operations.
@@ -79,6 +81,19 @@ list_item_remove (std::string &item)
     mylist.remove(item);
 }
 
+bool
+isOdd (int &num)
+{
+    return num % 2 == 0;
+}
+
+bool
+deleteAll (void *ptr)
+{
+    free(ptr);
+    return true;
+}
+
 /* Remove all.
  * O(n)
  */
@@ -87,15 +102,9 @@ list_item_erase (void)
 {
     mylist.clear();
     mylist.erase(mylist.begin(), mylist.end());
-}
-
-/* Remove operations.
- * O(n)
- */
-void
-list_item_erase (void)
-{
     mylist.erase(mylist.begin());
+    mylist.remove_if(mylist.begin(), mylist.end(), isOdd);
+    mylist.remove_if(mylist.begin(), mylist.end(), deleteAll);
 }
 
 /* Check if entry exist / Iteration
@@ -128,7 +137,7 @@ list_get_size (void)
  * Check if the list is empty.
  */
 bool
-list_get_size (void)
+list_is_empty (void)
 {
     return mylist.empty();
 }
