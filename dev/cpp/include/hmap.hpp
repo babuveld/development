@@ -60,24 +60,15 @@ public:
      *
      */
     int entry_insert(std::string &key_name, void *value) {
-        int rc = EOK;
+        if (entry_get(key_name)) {
+            return EEXIST;
+        }
 
         htbl_mtx.lock();
-
-        do {
-            if (htbl.find(key_name) != htbl.end()) {
-                /* Found an existing entry in the hash table
-                 */
-                rc = EEXIST;
-                break; 
-            }
-
-            htbl[key_name] = value;
-        } while(0);
-        
+        htbl[key_name] = value;        
         htbl_mtx.unlock();
 
-        return rc;
+        return EOK;
     }
 
     /**
